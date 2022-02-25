@@ -12,12 +12,12 @@ namespace Compiler
     }
     public enum Enum
     {
+        T_EOF,
         T_PLUS,
         T_MINUS,
         T_START,
         T_SLASH, 
         T_INTLIT,
-        T_EOF
     }
 
 }

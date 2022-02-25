@@ -19,8 +19,9 @@ namespace Compiler
             //string[] tokstr = { "+", "-", "*", "/", "intlit" };
             Lexer lexer = new Lexer(stream);
             Token token = lexer.Scan();
-            Parser parser = new Parser(token,lexer);
-            AST n = parser.Binexpr();
+            Parser2 parser = new Parser2(token,lexer);
+            AST n = parser.Binexpr(0);
+            // Console.WriteLine(n.left.left.op);
             Console.WriteLine($"{InterpretAST(n)}");
             //while (token.token != Enum.T_EOF)
             //{ 
@@ -66,6 +67,7 @@ namespace Compiler
                     return ast.intvalue;
                 default:
                     Console.WriteLine($"Unknown AST operator {ast.op}");
+                    Environment.Exit(0);
                     return 0;
             }
         }

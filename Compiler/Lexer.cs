@@ -76,6 +76,7 @@ namespace Compiler
                         break;
                     }
                     Console.WriteLine("Unrecognised character {0} on line {1}\n",  c, line);
+                    Environment.Exit(0);
                     return t;
             }
             return t;

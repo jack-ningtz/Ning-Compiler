@@ -4,12 +4,13 @@ using System.Text;
 
 namespace Compiler
 {
-    class Parser
+    class Parser2
     {
         private Token token;
         private Lexer lexer;
-
-        public Parser(Token token,Lexer lexer)
+        //Token的运算符优先级
+        private readonly int[] OpPrec = { 0, 10, 10, 20, 20, 0 };
+        public Parser2(Token token, Lexer lexer)
         {
             this.token = token;
             this.lexer = lexer;
@@ -30,9 +31,9 @@ namespace Compiler
                     return null;
             }
         }
-        public ASTEnum ArithOp(Enum tok)
+        public ASTEnum ArithOp(Enum tokentype)
         {
-            switch (tok)
+            switch (tokentype)
             {
                 case Enum.T_PLUS:
                     return ASTEnum.A_ADD;
@@ -43,13 +44,41 @@ namespace Compiler
                 case Enum.T_SLASH:
                     return ASTEnum.A_DIVIDE;
                 default:
-                    Console.WriteLine($"syntax error on line {lexer.line}, token {tok}");
+                    Console.WriteLine($"syntax error on line {lexer.line}, token {tokentype}");
                     Environment.Exit(0);
                     return ASTEnum.A_ERROR;
             }
         }
-        // 返回根为 "*" 或 "/"操作符的AST树
-        public AST Multiplicative_Expr()
+        //检查运算符，返回优先级
+        public int Op_Precedence(Enum tokentype)
+        {
+            int prec = OpPrec[(int)tokentype];
+            if (prec == 0)
+            {
+                Console.WriteLine($"syntax error on line {lexer.line}, token {tokentype}");
+                Environment.Exit(0);
+                return 0;
+            }
+            return prec;
+        }
+        //public AST Binexpr()
+        //{
+        //    AST ast = new AST();
+        //    AST n, left, right;
+        //    ASTEnum nodetype;
+        //    left = Primary();
+        //    if (token.token == Enum.T_EOF)
+        //    {
+        //        return left;
+        //    }
+        //    nodetype = ArithOp(token.token);
+        //    token = lexer.Scan();
+        //    right = Binexpr();
+
+        //    n = ast.MkAst(nodetype, left, right,0);
+        //    return n;
+        //}
+        public AST Binexpr(int ptp)
         {
             AST ast = new AST();
             AST left, right;
@@ -57,43 +86,21 @@ namespace Compiler
             left = Primary();
             tokentype = token.token;
             if (tokentype == Enum.T_EOF)
+            {
                 return left;
-            while ((tokentype == Enum.T_START) || (tokentype == Enum.T_SLASH))
+            }
+            while (Op_Precedence(tokentype) > ptp)
             {
                 token = lexer.Scan();
-                right = Primary();
+                right = Binexpr(OpPrec[(int)tokentype]);
                 left = ast.MkAst(ArithOp(tokentype), left, right, 0);
                 tokentype = token.token;
                 if (tokentype == Enum.T_EOF)
-                    break;
+                {
+                    return left;
+                }
             }
             return left;
-
-        }
-        //返回父节点为 "+" 或 "-"的AST树
-        public AST Additive_Expr()
-        {
-            AST ast = new AST();
-            AST left, right;
-            Enum tokentype;
-            left = Multiplicative_Expr();
-            tokentype = token.token;
-            if (tokentype == Enum.T_EOF)
-                return left;
-            while (true)
-            {
-                token = lexer.Scan();
-                right = Multiplicative_Expr();
-                left = ast.MkAst(ArithOp(tokentype), left, right, 0);
-                tokentype = token.token;
-                if (tokentype == Enum.T_EOF)
-                    break;
-            }
-            return left;
-        }
-        public AST Binexpr(int ptp)
-        {
-            return Additive_Expr();
         }
     }
 }
