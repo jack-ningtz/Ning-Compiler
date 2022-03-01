@@ -23,7 +23,8 @@ namespace Compiler
             AST n = parser.Binexpr(0);
             //Console.WriteLine(n.left.left.op);
             Console.WriteLine($"{InterpretAST(n)}");
-            
+
+            Gen.Generatecode(n);
             
             //while (token.token != Enum.T_EOF)
             //{ 
