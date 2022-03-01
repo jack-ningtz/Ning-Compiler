@@ -63,7 +63,7 @@ namespace Compiler
                     t.token = Enum.T_MINUS;
                     break;
                 case '*':
-                    t.token = Enum.T_START;
+                    t.token = Enum.T_STAR;
                     break;
                 case '/':
                     t.token = Enum.T_SLASH;

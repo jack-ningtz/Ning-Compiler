@@ -21,8 +21,10 @@ namespace Compiler
             Token token = lexer.Scan();
             Parser2 parser = new Parser2(token,lexer);
             AST n = parser.Binexpr(0);
-            // Console.WriteLine(n.left.left.op);
+            //Console.WriteLine(n.left.left.op);
             Console.WriteLine($"{InterpretAST(n)}");
+            
+            
             //while (token.token != Enum.T_EOF)
             //{ 
             //    Console.Write($"Token : {tokstr[(int)token.token]}")  ;

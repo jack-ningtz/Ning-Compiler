@@ -15,11 +15,12 @@ namespace Compiler
 
         public AST MkAst(ASTEnum op, AST left, AST right, int intvalue)
         {
-            this.op = op;
-            this.left = left;
-            this.right = right;
-            this.intvalue = intvalue;
-            return this;
+            AST a = new AST();
+            a.op = op;
+            a.left = left;
+            a.right = right;
+            a.intvalue = intvalue;
+            return a;
         }
         public AST MkAstLeaf(ASTEnum op, int intvalue)
         {

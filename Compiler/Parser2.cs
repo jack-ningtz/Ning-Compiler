@@ -9,7 +9,14 @@ namespace Compiler
         private Token token;
         private Lexer lexer;
         //Token的运算符优先级
-        private readonly int[] OpPrec = { 0, 10, 10, 20, 20, 0 };
+        private readonly int[] OpPrec = {
+            0,  // T_EOF
+            10, // T_PLUS
+            10, // T_MINUS
+            20, // T_STAR
+            20, // T_SLASH
+            0   // T_INTLIT
+        };
         public Parser2(Token token, Lexer lexer)
         {
             this.token = token;
@@ -39,7 +46,7 @@ namespace Compiler
                     return ASTEnum.A_ADD;
                 case Enum.T_MINUS:
                     return ASTEnum.A_SUBTRACT;
-                case Enum.T_START:
+                case Enum.T_STAR:
                     return ASTEnum.A_MULTIPLY;
                 case Enum.T_SLASH:
                     return ASTEnum.A_DIVIDE;
@@ -86,7 +93,7 @@ namespace Compiler
             left = Primary();
             tokentype = token.token;
             if (tokentype == Enum.T_EOF)
-            {
+            { 
                 return left;
             }
             while (Op_Precedence(tokentype) > ptp)

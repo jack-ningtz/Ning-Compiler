@@ -15,7 +15,7 @@ namespace Compiler
         T_EOF,
         T_PLUS,
         T_MINUS,
-        T_START,
+        T_STAR,
         T_SLASH, 
         T_INTLIT,
     }

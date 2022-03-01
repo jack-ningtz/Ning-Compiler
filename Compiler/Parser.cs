@@ -38,7 +38,7 @@ namespace Compiler
                     return ASTEnum.A_ADD;
                 case Enum.T_MINUS:
                     return ASTEnum.A_SUBTRACT;
-                case Enum.T_START:
+                case Enum.T_STAR:
                     return ASTEnum.A_MULTIPLY;
                 case Enum.T_SLASH:
                     return ASTEnum.A_DIVIDE;
@@ -58,7 +58,7 @@ namespace Compiler
             tokentype = token.token;
             if (tokentype == Enum.T_EOF)
                 return left;
-            while ((tokentype == Enum.T_START) || (tokentype == Enum.T_SLASH))
+            while ((tokentype == Enum.T_STAR) || (tokentype == Enum.T_SLASH))
             {
                 token = lexer.Scan();
                 right = Primary();
@@ -79,7 +79,9 @@ namespace Compiler
             left = Multiplicative_Expr();
             tokentype = token.token;
             if (tokentype == Enum.T_EOF)
+            {
                 return left;
+            }
             while (true)
             {
                 token = lexer.Scan();
@@ -87,7 +89,9 @@ namespace Compiler
                 left = ast.MkAst(ArithOp(tokentype), left, right, 0);
                 tokentype = token.token;
                 if (tokentype == Enum.T_EOF)
+                {
                     break;
+                }
             }
             return left;
         }
