@@ -1,0 +1,13 @@
+D:\mygit_repository\Ning-Compiler\Compiler\bin\Debug\netcoreapp3.1\Compiler.exe
+D:\mygit_repository\Ning-Compiler\Compiler\bin\Debug\netcoreapp3.1\Compiler.deps.json
+D:\mygit_repository\Ning-Compiler\Compiler\bin\Debug\netcoreapp3.1\Compiler.runtimeconfig.json
+D:\mygit_repository\Ning-Compiler\Compiler\bin\Debug\netcoreapp3.1\Compiler.runtimeconfig.dev.json
+D:\mygit_repository\Ning-Compiler\Compiler\bin\Debug\netcoreapp3.1\Compiler.dll
+D:\mygit_repository\Ning-Compiler\Compiler\bin\Debug\netcoreapp3.1\Compiler.pdb
+D:\mygit_repository\Ning-Compiler\Compiler\obj\Debug\netcoreapp3.1\Compiler.csproj.AssemblyReference.cache
+D:\mygit_repository\Ning-Compiler\Compiler\obj\Debug\netcoreapp3.1\Compiler.AssemblyInfoInputs.cache
+D:\mygit_repository\Ning-Compiler\Compiler\obj\Debug\netcoreapp3.1\Compiler.AssemblyInfo.cs
+D:\mygit_repository\Ning-Compiler\Compiler\obj\Debug\netcoreapp3.1\Compiler.csproj.CoreCompileInputs.cache
+D:\mygit_repository\Ning-Compiler\Compiler\obj\Debug\netcoreapp3.1\Compiler.dll
+D:\mygit_repository\Ning-Compiler\Compiler\obj\Debug\netcoreapp3.1\Compiler.pdb
+D:\mygit_repository\Ning-Compiler\Compiler\obj\Debug\netcoreapp3.1\Compiler.genruntimeconfig.cache
