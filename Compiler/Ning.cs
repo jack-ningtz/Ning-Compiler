@@ -20,20 +20,14 @@ namespace Compiler
             Lexer lexer = new Lexer(stream);
             Token token = lexer.Scan();
             Parser2 parser = new Parser2(token,lexer);
-            AST n = parser.Binexpr(0);
-            Console.WriteLine($"{InterpretAST(n)}");
+            Statement statement = new Statement(parser);
 
-            Gen.Generatecode(n);
-            
-            //while (token.token != Enum.T_EOF)
-            //{ 
-            //    Console.Write($"Token : {tokstr[(int)token.token]}")  ;
-            //    if (token.token == Enum.T_INTLIT)
-            //        Console.Write($" ,value {token.value}");
-            //    Console.WriteLine();
-            //    token = lexer.Scan();
-            //}
+            Gen.GenPreamble();
+            statement.Statements();
+            Gen.GenPostamble();
+
         }
+
         static string[] tokstr = { "+", "-", "*", "/" };
         private static int InterpretAST(AST ast)
         {
@@ -46,14 +40,6 @@ namespace Compiler
             if (ast.right != null)
             {
                 rightval = InterpretAST(ast.right);
-            }
-            if (ast.op == ASTEnum.A_INTLIT)
-            {
-                Console.WriteLine($"int {ast.intvalue}");
-            }
-            else
-            {
-                Console.WriteLine($"{leftval} {tokstr[(int)ast.op]} {rightval} ");
             }
             switch (ast.op)
             {

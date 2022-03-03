@@ -6,8 +6,8 @@ namespace Compiler
 {
     class Parser2
     {
-        private Token token;
-        private Lexer lexer;
+        public Token token { get; set; }
+        public Lexer lexer { get; set; }
         //Token的运算符优先级
         private readonly int[] OpPrec = {
             0,  // T_EOF
@@ -92,7 +92,7 @@ namespace Compiler
             Enum tokentype;
             left = Primary();
             tokentype = token.token;
-            if (tokentype == Enum.T_EOF)
+            if (tokentype == Enum.T_SEMI)
             { 
                 return left;
             }
@@ -102,7 +102,7 @@ namespace Compiler
                 right = Binexpr(OpPrec[(int)tokentype]);
                 left = ast.MkAst(ArithOp(tokentype), left, right, 0);
                 tokentype = token.token;
-                if (tokentype == Enum.T_EOF)
+                if (tokentype == Enum.T_SEMI)
                 {
                     return left;
                 }

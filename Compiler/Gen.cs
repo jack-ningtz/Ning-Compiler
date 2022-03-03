@@ -32,12 +32,28 @@ namespace Compiler
                     return -1;
             }
         }
-        public static void Generatecode(AST n)
+        //public static void Generatecode(AST n)
+        //{
+        //    int reg;
+        //    generation.CgPreamble();
+        //    reg = GenAST(n);
+        //    generation.CgPostamble();
+        //}
+        public static void GenPreamble()
         {
-            int reg;
             generation.CgPreamble();
-            reg = GenAST(n);
+        }
+        public static void GenPostamble()
+        {
             generation.CgPostamble();
+        }
+        public static void GenFreeregs()
+        {
+            generation.Freeall_Registers();
+        }
+        public static void GenPrintInt(int reg)
+        {
+            generation.CgPrintint(reg);
         }
     }
 }

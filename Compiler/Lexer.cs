@@ -10,7 +10,9 @@ namespace Compiler
         private FileStream stream; 
         public int line = 1;
         private char putback = '\0';
-
+        private readonly int TEXTLEN = 512;
+        //标识符或关键字
+        private string TEXT;
         public Lexer(FileStream stream)
         {
             this.stream = stream;
@@ -48,6 +50,7 @@ namespace Compiler
         {
             Token t = new Token();
             t.token = Enum.T_EOF;
+            Enum tokentype = 0;
             char c = SkipWhiteSpace();
             // 最后字符
             if (Convert.ToInt32(c).Equals(65535))
@@ -68,6 +71,9 @@ namespace Compiler
                 case '/':
                     t.token = Enum.T_SLASH;
                     break;
+                case ';':
+                    t.token = Enum.T_SEMI;
+                    break;
                 default:
                     if (Char.IsDigit(c))
                     {
@@ -75,11 +81,54 @@ namespace Compiler
                         t.value = ScanInt(c);
                         break;
                     }
+                    else if (Char.IsLetter(c) || c == '_')
+                    {
+                        TEXT = ScanIdent(c, TEXTLEN);
+                        tokentype = KeyWord(TEXT);
+                        if (tokentype == Enum.T_PRINT)
+                        {
+                            t.token = tokentype;
+                            break;
+                        }
+                        Console.WriteLine("Unrecognised symbol {0} on line {1}\n", TEXT, line);
+                        Environment.Exit(0);
+                    }
                     Console.WriteLine("Unrecognised character {0} on line {1}\n",  c, line);
                     Environment.Exit(0);
                     return t;
             }
             return t;
+        }
+
+        private Enum KeyWord(string tEXT)
+        {
+            if (tEXT.Equals("print"))
+            {
+                return Enum.T_PRINT;
+            }
+            return 0;
+        }
+
+        private string ScanIdent(char c, int tEXTLEN)
+        {
+            string str = "";
+            int i = 0;
+            while (char.IsDigit(c) || char.IsLetter(c) || '_' == c)
+            {
+                if (tEXTLEN - 1 == i)
+                {
+                    Console.WriteLine($"identifier too long on line {line}\n");
+                    Environment.Exit(1);
+                }
+                else if(i < (tEXTLEN - 1))
+                {
+                    str += c.ToString();
+                    i++;
+                }
+                c = NextChar();
+            }
+            Putback(c);
+            return str;
         }
 
         private int ScanInt(char c)

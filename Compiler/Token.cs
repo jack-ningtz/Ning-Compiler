@@ -18,6 +18,8 @@ namespace Compiler
         T_STAR,
         T_SLASH, 
         T_INTLIT,
+        T_SEMI, 
+        T_PRINT,
     }
 
 }

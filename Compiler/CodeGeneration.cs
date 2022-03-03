@@ -9,7 +9,7 @@ namespace Compiler
         static int[] freereg = { 1, 1, 1, 1 };
         static string[] reglist = { "%r8", "%r9", "%r10", "%r11" };
 
-        static void Freeall_Registers()
+        public void Freeall_Registers()
         {
             freereg[0] = 1;
             freereg[1] = 1;
