@@ -33,6 +33,7 @@ namespace Compiler
     }
     public enum ASTEnum
     {
-        A_ADD, A_SUBTRACT, A_MULTIPLY, A_DIVIDE, A_INTLIT,A_ERROR
+        A_ADD, A_SUBTRACT, A_MULTIPLY, A_DIVIDE, A_INTLIT,
+        A_IDENT, A_LVIDENT, A_ASSIGN,A_ERROR
     };
 }

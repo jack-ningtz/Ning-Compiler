@@ -6,6 +6,8 @@ namespace Compiler
     {
         static void Main(string[] args)
         {
+
+
             Ning.NingCompileFile("Input");
 
             Console.ReadKey();

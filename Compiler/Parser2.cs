@@ -32,9 +32,16 @@ namespace Compiler
                     AST a = ast.MkAstLeaf(ASTEnum.A_INTLIT, token.value);
                     token = lexer.Scan();
                     return a;
+                case Enum.T_IDENT:
+                    int id = new SymbolTables().FindGlob(Lexer.TEXT);
+                    if (id == -1)
+                        Error.Fatals($"Unknow variable ",Lexer.TEXT,Lexer.line);
+                    AST n = ast.MkAstLeaf(ASTEnum.A_IDENT, id);
+                    token = lexer.Scan();
+
+                    return n;
                 default:
-                    Console.WriteLine($" syntax error on line {lexer.line}");
-                    Environment.Exit(0);
+                    Error.Fatal("Syntax error", Lexer.line);
                     return null;
             }
         }
@@ -51,8 +58,7 @@ namespace Compiler
                 case Enum.T_SLASH:
                     return ASTEnum.A_DIVIDE;
                 default:
-                    Console.WriteLine($"syntax error on line {lexer.line}, token {tokentype}");
-                    Environment.Exit(0);
+                    Error.Fatald("Syntax error , token", tokentype, Lexer.line);
                     return ASTEnum.A_ERROR;
             }
         }
@@ -62,8 +68,7 @@ namespace Compiler
             int prec = OpPrec[(int)tokentype];
             if (prec == 0)
             {
-                Console.WriteLine($"syntax error on line {lexer.line}, token {tokentype}");
-                Environment.Exit(0);
+                Error.Fatald("Syntax error , token", tokentype, Lexer.line);
                 return 0;
             }
             return prec;

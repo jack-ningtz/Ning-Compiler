@@ -7,13 +7,13 @@ namespace Compiler
     class Gen
     {
         private static CodeGeneration generation = new CodeGeneration();
-        public static int GenAST(AST n)
+        public static int GenAST(AST n , int reg)
         {
             int leftreg=0, rightreg=0;
             if (n.left != null)
-                leftreg = Gen.GenAST(n.left);
+                leftreg = Gen.GenAST(n.left, -1);
             if (n.right != null)
-                rightreg = Gen.GenAST(n.right);
+                rightreg = Gen.GenAST(n.right, leftreg);
             switch (n.op)
             {
                 case ASTEnum.A_ADD:
@@ -25,10 +25,15 @@ namespace Compiler
                 case ASTEnum.A_DIVIDE:
                     return generation.CgDiv(leftreg, rightreg);
                 case ASTEnum.A_INTLIT:
-                    return generation.CgLoad(n.intvalue);
+                    return generation.CgLoadInt(n.intvalue);
+                case ASTEnum.A_IDENT:
+                    return generation.CgLoadGlob(SymbolTables.symts[n.intvalue].Name);
+                case ASTEnum.A_LVIDENT:
+                    return generation.CgStorGlob(reg, SymbolTables.symts[n.intvalue].Name);
+                case ASTEnum.A_ASSIGN:
+                    return rightreg;
                 default:
-                    Console.WriteLine($"Unknown AST operator {n.op}");
-                    Environment.Exit(0);
+                    Error.Fatal($"Unknown AST operator {n.op}");
                     return -1;
             }
         }
@@ -54,6 +59,10 @@ namespace Compiler
         public static void GenPrintInt(int reg)
         {
             generation.CgPrintint(reg);
+        }
+        public static void GenGlobSym(string name)
+        {
+            generation.CgGlobSym(name);
         }
     }
 }

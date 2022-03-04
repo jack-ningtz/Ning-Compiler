@@ -26,16 +26,14 @@ namespace Compiler
                     return i;
                 }
             }
-            Console.WriteLine("Out of registers");
-            Environment.Exit(0);
+            Error.Fatal("Out of registers");
             return -1;
         }
         public void Free_Register(int reg)
         {
             if (freereg[reg] != 0)
             {
-                Console.WriteLine($"Error trying to free register {reg}");
-                Environment.Exit(0);
+                Error.Fatal($"Error trying to free register {reg}");
             }
             freereg[reg] = 1;
         }
@@ -77,10 +75,16 @@ namespace Compiler
                 "\tret\n" 
                 );
         }
-        public int CgLoad(int value)
+        public int CgLoadInt(int value)
         {
             int r = Alloc_Register();
             Io.WriteExistsFile($"\tmovq\t${value}, {reglist[r]}\n");
+            return r;
+        }
+        public int CgLoadGlob(string identifier)
+        {
+            int r = Alloc_Register();
+            Io.WriteExistsFile($"\tmovq\t{identifier}(%rip), {reglist[r]}\n");
             return r;
         }
         public int CgAdd(int r1, int r2)
@@ -115,6 +119,16 @@ namespace Compiler
             Io.WriteExistsFile($"\tmovq\t{reglist[r]}, %rdi\n");
             Io.WriteExistsFile($"\tcall\tprintint\n");
             Free_Register(r);
+        }
+        //存储一个寄存器的值到变量中
+        public int CgStorGlob(int r, string identifiter)
+        {
+            Io.WriteExistsFile($"\tmovq\t{reglist[r]}, {identifiter}(%rip)\n");
+            return r;
+        }
+        public void CgGlobSym(string sym)
+        {
+            Io.WriteExistsFile($"\t.comm\t{sym},8,8\n");
         }
     }
 }

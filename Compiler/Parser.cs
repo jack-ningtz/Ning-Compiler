@@ -25,7 +25,7 @@ namespace Compiler
                     token = lexer.Scan();
                     return a;
                 default:
-                    Console.WriteLine($" syntax error on line {lexer.line}");
+                    Console.WriteLine($" syntax error on line {Lexer.line}");
                     Environment.Exit(0);
                     return null;
             }
@@ -43,7 +43,7 @@ namespace Compiler
                 case Enum.T_SLASH:
                     return ASTEnum.A_DIVIDE;
                 default:
-                    Console.WriteLine($"syntax error on line {lexer.line}, token {tok}");
+                    Console.WriteLine($"syntax error on line {Lexer.line}, token {tok}");
                     Environment.Exit(0);
                     return ASTEnum.A_ERROR;
             }

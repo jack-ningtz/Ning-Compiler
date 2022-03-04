@@ -8,11 +8,11 @@ namespace Compiler
     class Lexer
     {
         private FileStream stream; 
-        public int line = 1;
+        public static int line = 1;
         private char putback = '\0';
         private readonly int TEXTLEN = 512;
         //标识符或关键字
-        private string TEXT;
+        public static string TEXT;
         public Lexer(FileStream stream)
         {
             this.stream = stream;
@@ -74,6 +74,9 @@ namespace Compiler
                 case ';':
                     t.token = Enum.T_SEMI;
                     break;
+                case '=':
+                    t.token = Enum.T_EQUALS;
+                    break;
                 default:
                     if (Char.IsDigit(c))
                     {
@@ -85,16 +88,15 @@ namespace Compiler
                     {
                         TEXT = ScanIdent(c, TEXTLEN);
                         tokentype = KeyWord(TEXT);
-                        if (tokentype == Enum.T_PRINT)
+                        if (tokentype != 0)
                         {
                             t.token = tokentype;
                             break;
                         }
-                        Console.WriteLine("Unrecognised symbol {0} on line {1}\n", TEXT, line);
-                        Environment.Exit(0);
+                        t.token = Enum.T_IDENT;
+                        break;
                     }
-                    Console.WriteLine("Unrecognised character {0} on line {1}\n",  c, line);
-                    Environment.Exit(0);
+                    Error.Fatalc("Unrecognised character", c, line);
                     return t;
             }
             return t;
@@ -105,6 +107,10 @@ namespace Compiler
             if (tEXT.Equals("print"))
             {
                 return Enum.T_PRINT;
+            }
+            if (tEXT.Equals("int")) 
+            {
+                return Enum.T_INT;
             }
             return 0;
         }
@@ -117,8 +123,7 @@ namespace Compiler
             {
                 if (tEXTLEN - 1 == i)
                 {
-                    Console.WriteLine($"identifier too long on line {line}\n");
-                    Environment.Exit(1);
+                    Error.Fatal("identifier too long on line", line);
                 }
                 else if(i < (tEXTLEN - 1))
                 {

@@ -19,7 +19,12 @@ namespace Compiler
         T_SLASH, 
         T_INTLIT,
         T_SEMI, 
+
+        T_EQUALS,
+        T_IDENT,
+        // Keywords
         T_PRINT,
+        T_INT
     }
 
 }

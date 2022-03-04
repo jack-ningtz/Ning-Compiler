@@ -20,13 +20,16 @@ namespace Compiler
             }
             else
             {
-                Console.WriteLine($"{what} expected on line {parser.lexer.line} \n");
-                Environment.Exit(1);
+                Error.Fatals("Expecte", what, Lexer.line);
             }
         }
         public void Semi()
         {
             Match(Enum.T_SEMI, ";");
+        }
+        public void Ident()
+        {
+            Match(Enum.T_IDENT, "identifier");
         }
     }
 }
