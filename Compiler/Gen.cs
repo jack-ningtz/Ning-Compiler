@@ -24,6 +24,18 @@ namespace Compiler
                     return generation.CgMul(leftreg, rightreg);
                 case ASTEnum.A_DIVIDE:
                     return generation.CgDiv(leftreg, rightreg);
+                case ASTEnum.A_EQ:
+                    return generation.CgEqual(leftreg, rightreg);
+                case ASTEnum.A_NE:
+                    return generation.CgNotEqual(leftreg, rightreg);
+                case ASTEnum.A_LT:
+                    return generation.CgLessThan(leftreg, rightreg);
+                case ASTEnum.A_GT:
+                    return generation.CgGreaterThan(leftreg, rightreg);
+                case ASTEnum.A_LE:
+                    return generation.CgLessEqual(leftreg, rightreg);
+                case ASTEnum.A_GE:
+                    return generation.CgGreaterEqual(leftreg, rightreg);
                 case ASTEnum.A_INTLIT:
                     return generation.CgLoadInt(n.intvalue);
                 case ASTEnum.A_IDENT:

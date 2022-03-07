@@ -8,6 +8,7 @@ namespace Compiler
     {
         static int[] freereg = { 1, 1, 1, 1 };
         static string[] reglist = { "%r8", "%r9", "%r10", "%r11" };
+        static string[] breglist = { "%r8b", "%r9b", "%r10b", "%r11b" };
 
         public void Freeall_Registers()
         {
@@ -129,6 +130,44 @@ namespace Compiler
         public void CgGlobSym(string sym)
         {
             Io.WriteExistsFile($"\t.comm\t{sym},8,8\n");
+        }
+        public int CgCompare(int r1, int r2, string how)
+        {
+            Io.WriteExistsFile($"\tcmpq\t{reglist[r2]},{reglist[r1]}\n");
+            Io.WriteExistsFile($"\t{how}\t{breglist[r2]}\n");
+            Io.WriteExistsFile($"\tandq\t$255,{reglist[r2]}\n");
+            Free_Register(r1);
+            return r2;
+        }
+        // ==
+        public int CgEqual(int r1, int r2)
+        {
+            return CgCompare(r1, r2, "sete");
+        }
+        // !=
+        public int CgNotEqual(int r1, int r2)
+        {
+            return CgCompare(r1, r2, "setne");
+        }
+        // <
+        public int CgLessThan(int r1, int r2)
+        {
+            return CgCompare(r1, r2, "setl");
+        }
+        // >
+        public int CgGreaterThan(int r1, int r2)
+        {
+            return CgCompare(r1, r2,"setg");
+        }
+        // <=
+        public int CgLessEqual(int r1, int r2)
+        {
+            return CgCompare(r1, r2, "setle");
+        }
+        // >=
+        public int CgGreaterEqual(int r1, int r2)
+        {
+            return CgCompare(r1, r2, "setge");
         }
     }
 }

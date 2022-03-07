@@ -21,35 +21,83 @@ main:
 	pushq	%rbp
 	movq	%rsp, %rbp
 	.comm	x,8,8
-	movq	$1, %r8
-	movq	%r8, x(%rip)
-	movq	x(%rip), %r8
-	movq	%r8, %rdi
-	call	printint
-	movq	x(%rip), %r8
-	movq	$1, %r9
-	addq	%r8,%r9
+	movq	$7, %r8
+	movq	$9, %r9
+	cmpq	%r9,%r8
+	setg	%r9b
+	andq	$255,%r9
 	movq	%r9, x(%rip)
 	movq	x(%rip), %r8
 	movq	%r8, %rdi
 	call	printint
-	movq	x(%rip), %r8
-	movq	$1, %r9
-	addq	%r8,%r9
+	movq	$7, %r8
+	movq	$9, %r9
+	cmpq	%r9,%r8
+	setle	%r9b
+	andq	$255,%r9
 	movq	%r9, x(%rip)
 	movq	x(%rip), %r8
 	movq	%r8, %rdi
 	call	printint
-	movq	x(%rip), %r8
-	movq	$1, %r9
-	addq	%r8,%r9
+	movq	$7, %r8
+	movq	$9, %r9
+	cmpq	%r9,%r8
+	setne	%r9b
+	andq	$255,%r9
 	movq	%r9, x(%rip)
 	movq	x(%rip), %r8
 	movq	%r8, %rdi
 	call	printint
+	movq	$7, %r8
+	movq	$7, %r9
+	cmpq	%r9,%r8
+	sete	%r9b
+	andq	$255,%r9
+	movq	%r9, x(%rip)
 	movq	x(%rip), %r8
-	movq	$1, %r9
-	addq	%r8,%r9
+	movq	%r8, %rdi
+	call	printint
+	movq	$7, %r8
+	movq	$7, %r9
+	cmpq	%r9,%r8
+	setge	%r9b
+	andq	$255,%r9
+	movq	%r9, x(%rip)
+	movq	x(%rip), %r8
+	movq	%r8, %rdi
+	call	printint
+	movq	$7, %r8
+	movq	$7, %r9
+	cmpq	%r9,%r8
+	setle	%r9b
+	andq	$255,%r9
+	movq	%r9, x(%rip)
+	movq	x(%rip), %r8
+	movq	%r8, %rdi
+	call	printint
+	movq	$9, %r8
+	movq	$7, %r9
+	cmpq	%r9,%r8
+	setg	%r9b
+	andq	$255,%r9
+	movq	%r9, x(%rip)
+	movq	x(%rip), %r8
+	movq	%r8, %rdi
+	call	printint
+	movq	$9, %r8
+	movq	$7, %r9
+	cmpq	%r9,%r8
+	setge	%r9b
+	andq	$255,%r9
+	movq	%r9, x(%rip)
+	movq	x(%rip), %r8
+	movq	%r8, %rdi
+	call	printint
+	movq	$9, %r8
+	movq	$7, %r9
+	cmpq	%r9,%r8
+	setne	%r9b
+	andq	$255,%r9
 	movq	%r9, x(%rip)
 	movq	x(%rip), %r8
 	movq	%r8, %rdi

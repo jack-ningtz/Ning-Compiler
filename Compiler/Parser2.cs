@@ -59,6 +59,18 @@ namespace Compiler
                     return ASTEnum.A_MULTIPLY;
                 case Enum.T_SLASH:
                     return ASTEnum.A_DIVIDE;
+                case Enum.T_EQ:
+                    return ASTEnum.A_EQ;
+                case Enum.T_NE:
+                    return ASTEnum.A_NE;
+                case Enum.T_LT:
+                    return ASTEnum.A_LT;
+                case Enum.T_GT:
+                    return ASTEnum.A_GT;
+                case Enum.T_LE:
+                    return ASTEnum.A_LE;
+                case Enum.T_GE:
+                    return ASTEnum.A_GE;
                 default:
                     Error.Fatald("Syntax error , token", tokentype, Lexer.line);
                     return ASTEnum.A_ERROR;
