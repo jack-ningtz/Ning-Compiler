@@ -75,7 +75,47 @@ namespace Compiler
                     t.token = Enum.T_SEMI;
                     break;
                 case '=':
-                    t.token = Enum.T_EQUALS;
+                    if ((c = NextChar()) == '=')
+                    {
+                        t.token = Enum.T_EQ; // ==
+                    }
+                    else
+                    {
+                        Putback(c);
+                        t.token = Enum.T_ASSIGN; // =
+                    }
+                    break;
+                case '!':
+                    if ((c = NextChar()) == '=')
+                    {
+                        t.token = Enum.T_NE; // !=
+                    }
+                    else
+                    {
+                        Error.Fatalc("Unrecognised character", c, line);
+                    }
+                    break;
+                case '<':
+                    if ((c = NextChar()) == '=')
+                    {
+                        t.token = Enum.T_LE; // <=
+                    }
+                    else
+                    {
+                        Putback(c);
+                        t.token = Enum.T_LT; // <
+                    }
+                    break;
+                case '>':
+                    if ((c = NextChar()) == '=')
+                    {
+                        t.token = Enum.T_GE; // >=
+                    }
+                    else 
+                    {
+                        Putback(c);
+                        t.token = Enum.T_GT; // >
+                    }
                     break;
                 default:
                     if (Char.IsDigit(c))

@@ -15,6 +15,8 @@ namespace Compiler
             10, // T_MINUS
             20, // T_STAR
             20, // T_SLASH
+            30, 30, //T_EQ, T_NE
+            40, 40, 40, 40, // T_LT, T_GT, T_LE, T_GE
             0   // T_INTLIT
         };
         public Parser2(Token token, Lexer lexer)

@@ -20,16 +20,39 @@ printint:
 main:
 	pushq	%rbp
 	movq	%rsp, %rbp
-	.comm	fred,8,8
-	.comm	jim,8,8
-	movq	$5, %r8
-	movq	%r8, fred(%rip)
-	movq	$12, %r8
-	movq	%r8, jim(%rip)
-	movq	fred(%rip), %r8
-	movq	jim(%rip), %r9
+	.comm	x,8,8
+	movq	$1, %r8
+	movq	%r8, x(%rip)
+	movq	x(%rip), %r8
+	movq	%r8, %rdi
+	call	printint
+	movq	x(%rip), %r8
+	movq	$1, %r9
 	addq	%r8,%r9
-	movq	%r9, %rdi
+	movq	%r9, x(%rip)
+	movq	x(%rip), %r8
+	movq	%r8, %rdi
+	call	printint
+	movq	x(%rip), %r8
+	movq	$1, %r9
+	addq	%r8,%r9
+	movq	%r9, x(%rip)
+	movq	x(%rip), %r8
+	movq	%r8, %rdi
+	call	printint
+	movq	x(%rip), %r8
+	movq	$1, %r9
+	addq	%r8,%r9
+	movq	%r9, x(%rip)
+	movq	x(%rip), %r8
+	movq	%r8, %rdi
+	call	printint
+	movq	x(%rip), %r8
+	movq	$1, %r9
+	addq	%r8,%r9
+	movq	%r9, x(%rip)
+	movq	x(%rip), %r8
+	movq	%r8, %rdi
 	call	printint
 	movl	$0, %eax
 	popq	%rbp

@@ -15,9 +15,6 @@ namespace Compiler
             this.parser = parser;
             this.miscellaneous = new Miscellaneous(this.parser);
         }
-        // Parsing of statements
-        // Copyright (c) 2019 Warren Toomey, GPL3
-
         // statements: statement
         //      |      statement statements
         //      ;
@@ -57,7 +54,7 @@ namespace Compiler
                 Error.Fatals($"Undeclared variable",Lexer.TEXT,Lexer.line);
             }
             right = n.MkAstLeaf(ASTEnum.A_LVIDENT, id);
-            miscellaneous.Match(Enum.T_EQUALS, "=");
+            miscellaneous.Match(Enum.T_ASSIGN, "=");
             left = parser.Binexpr(0);
             tree = n.MkAst(ASTEnum.A_ASSIGN, left, right, 0);
             Gen.GenAST(tree, -1);

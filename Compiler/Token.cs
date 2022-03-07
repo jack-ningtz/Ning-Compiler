@@ -16,11 +16,16 @@ namespace Compiler
         T_PLUS,
         T_MINUS,
         T_STAR,
-        T_SLASH, 
-        T_INTLIT,
-        T_SEMI, 
+        T_SLASH,
 
-        T_EQUALS,
+        T_EQ, T_NE,
+        T_LT, T_GT, T_LE, T_GE,
+
+        T_INTLIT,
+        T_SEMI,
+
+        T_ASSIGN,
+        //T_EQUALS,
         T_IDENT,
         // Keywords
         T_PRINT,
