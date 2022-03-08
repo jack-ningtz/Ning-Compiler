@@ -131,43 +131,81 @@ namespace Compiler
         {
             Io.WriteExistsFile($"\t.comm\t{sym},8,8\n");
         }
-        public int CgCompare(int r1, int r2, string how)
+        //public int CgCompare(int r1, int r2, string how)
+        //{
+        //    Io.WriteExistsFile($"\tcmpq\t{reglist[r2]},{reglist[r1]}\n");
+        //    Io.WriteExistsFile($"\t{how}\t{breglist[r2]}\n");
+        //    Io.WriteExistsFile($"\tandq\t$255,{reglist[r2]}\n");
+        //    Free_Register(r1);
+        //    return r2;
+        //}
+        //// ==
+        //public int CgEqual(int r1, int r2)
+        //{
+        //    return CgCompare(r1, r2, "sete");
+        //}
+        //// !=
+        //public int CgNotEqual(int r1, int r2)
+        //{
+        //    return CgCompare(r1, r2, "setne");
+        //}
+        //// <
+        //public int CgLessThan(int r1, int r2)
+        //{
+        //    return CgCompare(r1, r2, "setl");
+        //}
+        //// >
+        //public int CgGreaterThan(int r1, int r2)
+        //{
+        //    return CgCompare(r1, r2,"setg");
+        //}
+        //// <=
+        //public int CgLessEqual(int r1, int r2)
+        //{
+        //    return CgCompare(r1, r2, "setle");
+        //}
+        //// >=
+        //public int CgGreaterEqual(int r1, int r2)
+        //{
+        //    return CgCompare(r1, r2, "setge");
+        //}
+
+
+
+        // 比较指令列表
+        static string[] cmplist = { "sete", "setne","setl","setg","setle","setge"};
+        public int CgCompare_And_Set(ASTEnum astop, int r1, int r2)
         {
+            if ((astop < ASTEnum.A_EQ) || (astop > ASTEnum.A_GE))
+            {
+                Error.Fatal_General($"Bad ASTop in cgcompare_and_set()");
+            }
             Io.WriteExistsFile($"\tcmpq\t{reglist[r2]},{reglist[r1]}\n");
-            Io.WriteExistsFile($"\t{how}\t{breglist[r2]}\n");
-            Io.WriteExistsFile($"\tandq\t$255,{reglist[r2]}\n");
+            Io.WriteExistsFile($"\t{cmplist[astop - ASTEnum.A_EQ]}\t{breglist[r2]}\n");
+            Io.WriteExistsFile($"\tmovzbq\t{breglist[r2]}, {reglist[r2]}\n");
             Free_Register(r1);
             return r2;
         }
-        // ==
-        public int CgEqual(int r1, int r2)
+        public void CgLabel(int l)
         {
-            return CgCompare(r1, r2, "sete");
+            Io.WriteExistsFile($"L{l}:\n");
         }
-        // !=
-        public int CgNotEqual(int r1, int r2)
+        public void CgJump(int l)
         {
-            return CgCompare(r1, r2, "setne");
+            Io.WriteExistsFile($"\tjmp\tL{l}\n");
         }
-        // <
-        public int CgLessThan(int r1, int r2)
+        // 跳转指令反向列表
+        static string[] invcmplist = { "jne", "je", "jge", "jle", "jg", "jl" };
+        public int CgCompare_And_Jump(ASTEnum astop, int r1, int r2, int label)
         {
-            return CgCompare(r1, r2, "setl");
-        }
-        // >
-        public int CgGreaterThan(int r1, int r2)
-        {
-            return CgCompare(r1, r2,"setg");
-        }
-        // <=
-        public int CgLessEqual(int r1, int r2)
-        {
-            return CgCompare(r1, r2, "setle");
-        }
-        // >=
-        public int CgGreaterEqual(int r1, int r2)
-        {
-            return CgCompare(r1, r2, "setge");
+            if ((astop < ASTEnum.A_EQ )||( astop > ASTEnum.A_GE))
+            {
+                Error.Fatal_General($"Bad ASTop in cgcompare_and_jump()");
+            }
+            Io.WriteExistsFile($"\tcmpq\t{reglist[r2]}, {reglist[r1]}\n");
+            Io.WriteExistsFile($"\t{invcmplist[astop - ASTEnum.A_EQ]}\tL{label}\n");
+            Freeall_Registers();
+            return -1;
         }
     }
 }

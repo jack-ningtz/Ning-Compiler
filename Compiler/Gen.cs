@@ -7,14 +7,54 @@ namespace Compiler
     class Gen
     {
         private static CodeGeneration generation = new CodeGeneration();
-        public static int GenAST(AST n , int reg)
+        public static int NOREG = -1;
+        public static int id = 1;
+        public static int Label()
         {
-            int leftreg=0, rightreg=0;
-            if (n.left != null)
-                leftreg = Gen.GenAST(n.left, -1);
+            return id++;
+        }
+
+        public static int GenIFAST(AST n)
+        {
+            int Lfalse = 0, Lend = 0;
+            Lfalse = Label();
             if (n.right != null)
-                rightreg = Gen.GenAST(n.right, leftreg);
+                Lend = Label();
+            GenAST(n.left, Lfalse, n.op);
+            GenFreeregs();
+            GenAST(n.mid, NOREG, n.op);
+            GenFreeregs();
+            if (n.right != null)
+                generation.CgJump(Lend);
+            generation.CgLabel(Lfalse);
+            if (n.right != null)
+            {
+                GenAST(n.right, NOREG, n.op);
+                GenFreeregs();
+                generation.CgLabel(Lend);
+            }
+            return NOREG;
+        }
+        public static int GenAST(AST n , int reg, ASTEnum parentASTop)
+        {
+            int leftreg = 0, rightreg = 0;
             switch (n.op)
+            {
+                case ASTEnum.A_IF:
+                    return GenIFAST(n);
+                case ASTEnum.A_GLUE:
+                    GenAST(n.left, NOREG, n.op);
+                    GenFreeregs();
+                    GenAST(n.right, NOREG, n.op);
+                    GenFreeregs();
+                    return NOREG;
+            }
+
+            if (n.left!=null)
+                leftreg = GenAST(n.left, NOREG, n.op);
+            if (n.right != null)
+                rightreg = GenAST(n.right, leftreg, n.op);
+            switch (n.op) 
             {
                 case ASTEnum.A_ADD:
                     return generation.CgAdd(leftreg, rightreg);
@@ -25,17 +65,19 @@ namespace Compiler
                 case ASTEnum.A_DIVIDE:
                     return generation.CgDiv(leftreg, rightreg);
                 case ASTEnum.A_EQ:
-                    return generation.CgEqual(leftreg, rightreg);
                 case ASTEnum.A_NE:
-                    return generation.CgNotEqual(leftreg, rightreg);
                 case ASTEnum.A_LT:
-                    return generation.CgLessThan(leftreg, rightreg);
                 case ASTEnum.A_GT:
-                    return generation.CgGreaterThan(leftreg, rightreg);
                 case ASTEnum.A_LE:
-                    return generation.CgLessEqual(leftreg, rightreg);
                 case ASTEnum.A_GE:
-                    return generation.CgGreaterEqual(leftreg, rightreg);
+                    if (parentASTop == ASTEnum.A_IF)
+                    {
+                        return generation.CgCompare_And_Jump(n.op, leftreg, rightreg, reg);
+                    }
+                    else
+                    {
+                        return generation.CgCompare_And_Set(n.op, leftreg, rightreg);
+                    }
                 case ASTEnum.A_INTLIT:
                     return generation.CgLoadInt(n.intvalue);
                 case ASTEnum.A_IDENT:
@@ -44,6 +86,10 @@ namespace Compiler
                     return generation.CgStorGlob(reg, SymbolTables.symts[n.intvalue].Name);
                 case ASTEnum.A_ASSIGN:
                     return rightreg;
+                case ASTEnum.A_PRINT:
+                    GenPrintInt(leftreg);
+                    GenFreeregs();
+                    return NOREG;
                 default:
                     Error.Fatal($"Unknown AST operator {n.op}");
                     return -1;

@@ -6,9 +6,15 @@ namespace Compiler
 {
     class Error
     {
+        public static int l = Lexer.line;
         public static void Fatal(string s)
         {
             Console.WriteLine(s);
+            Environment.Exit(0);
+        }
+        public static void Fatal_General(string s)
+        {
+            Console.WriteLine($"{s} on line {l}\n");
             Environment.Exit(0);
         }
         public static void Fatal(string s, int line)

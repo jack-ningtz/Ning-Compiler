@@ -40,7 +40,6 @@ namespace Compiler
                         Error.Fatals($"Unknow variable ",Lexer.TEXT,Lexer.line);
                     AST n = ast.MkAstLeaf(ASTEnum.A_IDENT, id);
                     token = lexer.Scan();
-
                     return n;
                 default:
                     Error.Fatal("Syntax error", Lexer.line);
@@ -111,7 +110,7 @@ namespace Compiler
             Enum tokentype;
             left = Primary();
             tokentype = token.token;
-            if (tokentype == Enum.T_SEMI)
+            if ((tokentype == Enum.T_SEMI )|| (tokentype == Enum.T_RPAREN))
             { 
                 return left;
             }
@@ -119,9 +118,9 @@ namespace Compiler
             {
                 token = lexer.Scan();
                 right = Binexpr(OpPrec[(int)tokentype]);
-                left = ast.MkAst(ArithOp(tokentype), left, right, 0);
+                left = ast.MkAst(ArithOp(tokentype), left,null, right, 0);
                 tokentype = token.token;
-                if (tokentype == Enum.T_SEMI)
+                if ((tokentype == Enum.T_SEMI) || (tokentype == Enum.T_RPAREN))
                 {
                     return left;
                 }

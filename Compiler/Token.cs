@@ -27,9 +27,12 @@ namespace Compiler
         T_ASSIGN,
         //T_EQUALS,
         T_IDENT,
+
+        T_LBRACE, T_RBRACE, T_LPAREN, T_RPAREN,
         // Keywords
         T_PRINT,
-        T_INT
+        T_INT,
+        T_IF, T_ELSE
     }
 
 }

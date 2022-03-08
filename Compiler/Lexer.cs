@@ -74,6 +74,18 @@ namespace Compiler
                 case ';':
                     t.token = Enum.T_SEMI;
                     break;
+                case '{':
+                    t.token = Enum.T_LBRACE;
+                    break;
+                case '}':
+                    t.token = Enum.T_RBRACE;
+                    break;
+                case '(':
+                    t.token = Enum.T_LPAREN;
+                    break;
+                case ')':
+                    t.token = Enum.T_RPAREN;
+                    break;
                 case '=':
                     if ((c = NextChar()) == '=')
                     {
@@ -151,6 +163,14 @@ namespace Compiler
             if (tEXT.Equals("int")) 
             {
                 return Enum.T_INT;
+            }
+            if (tEXT.Equals("if"))
+            {
+                return Enum.T_IF;
+            }
+            if (tEXT.Equals("else"))
+            {
+                return Enum.T_ELSE;
             }
             return 0;
         }
