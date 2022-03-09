@@ -172,6 +172,10 @@ namespace Compiler
             {
                 return Enum.T_ELSE;
             }
+            if (tEXT.Equals("while"))
+            {
+                return Enum.T_WHILE;
+            }
             return 0;
         }
 

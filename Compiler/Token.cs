@@ -32,7 +32,8 @@ namespace Compiler
         // Keywords
         T_PRINT,
         T_INT,
-        T_IF, T_ELSE
+        T_IF, T_ELSE,T_WHILE
+
     }
 
 }

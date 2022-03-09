@@ -99,6 +99,20 @@ namespace Compiler
             }
             return n.MkAst(ASTEnum.A_IF, condast, trueast, falseast, 0);
         }
+        public AST While_Statement()
+        {
+            AST n = new AST();
+            AST condAST, bodyAST;
+            miscellaneous.Match(Enum.T_WHILE, "while");
+            miscellaneous.LParen();
+            condAST = parser.Binexpr(0);
+            if ((condAST.op < ASTEnum.A_EQ) || (condAST.op > ASTEnum.A_GE))
+                Error.Fatal_General("Bad comparison operator");
+            miscellaneous.RParen();
+            bodyAST = this.Compound_Statement();
+            return n.MkAst(ASTEnum.A_WHILE, condAST, null, bodyAST, 0);
+
+        }
         public AST Compound_Statement()
         {
             AST n = new AST();
@@ -120,6 +134,9 @@ namespace Compiler
                         break;
                     case Enum.T_IF:
                         tree = IF_Statement();
+                        break;
+                    case Enum.T_WHILE:
+                        tree = this.While_Statement();
                         break;
                     case Enum.T_RBRACE:
                         miscellaneous.Rbrace();

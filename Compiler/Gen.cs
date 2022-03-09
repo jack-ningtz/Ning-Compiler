@@ -35,13 +35,31 @@ namespace Compiler
             }
             return NOREG;
         }
-        public static int GenAST(AST n , int reg, ASTEnum parentASTop)
+        public static int GenWhileAST(AST n)
+        {
+            int Lstart = 0, Lend = 0;
+            Lstart = Label();
+            Lend = Label();
+            generation.CgLabel(Lstart);
+            GenAST(n.left, Lend, n.op);
+            GenFreeregs();
+            GenAST(n.right, NOREG, n.op);
+            GenFreeregs();
+
+  
+            generation.CgJump(Lstart);
+            generation.CgLabel(Lend);
+            return -1;
+        }
+        public static int GenAST(AST n, int reg, ASTEnum parentASTop)
         {
             int leftreg = 0, rightreg = 0;
             switch (n.op)
             {
                 case ASTEnum.A_IF:
                     return GenIFAST(n);
+                case ASTEnum.A_WHILE:
+                    return GenWhileAST(n);
                 case ASTEnum.A_GLUE:
                     GenAST(n.left, NOREG, n.op);
                     GenFreeregs();
@@ -50,11 +68,11 @@ namespace Compiler
                     return NOREG;
             }
 
-            if (n.left!=null)
+            if (n.left != null)
                 leftreg = GenAST(n.left, NOREG, n.op);
             if (n.right != null)
                 rightreg = GenAST(n.right, leftreg, n.op);
-            switch (n.op) 
+            switch (n.op)
             {
                 case ASTEnum.A_ADD:
                     return generation.CgAdd(leftreg, rightreg);
@@ -70,7 +88,7 @@ namespace Compiler
                 case ASTEnum.A_GT:
                 case ASTEnum.A_LE:
                 case ASTEnum.A_GE:
-                    if (parentASTop == ASTEnum.A_IF)
+                    if (parentASTop == ASTEnum.A_IF || parentASTop == ASTEnum.A_WHILE)
                     {
                         return generation.CgCompare_And_Jump(n.op, leftreg, rightreg, reg);
                     }

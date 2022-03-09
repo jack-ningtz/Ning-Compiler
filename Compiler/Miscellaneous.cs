@@ -47,7 +47,7 @@ namespace Compiler
         }
         public void Ident()
         {
-            Match(Enum.T_IDENT, "identifier");
+            Match(Enum.T_IDENT, "identifer");
         }
     }
 }

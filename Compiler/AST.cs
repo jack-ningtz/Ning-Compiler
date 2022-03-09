@@ -41,7 +41,7 @@ namespace Compiler
         A_INTLIT,
 
         A_IDENT, A_LVIDENT, A_ASSIGN,A_PRINT,
-        A_GLUE, A_IF,
+        A_GLUE, A_IF, A_WHILE,
 
         A_ERROR
     };

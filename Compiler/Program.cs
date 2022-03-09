@@ -8,7 +8,7 @@ namespace Compiler
         {
 
 
-            Ning.NingCompileFile("Input03");
+            Ning.NingCompileFile("Input06");
 
             Console.ReadKey();
 
