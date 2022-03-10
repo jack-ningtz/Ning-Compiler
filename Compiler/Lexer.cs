@@ -176,6 +176,10 @@ namespace Compiler
             {
                 return Enum.T_WHILE;
             }
+            if (tEXT.Equals("for"))
+            {
+                return Enum.T_FOR;
+            }
             return 0;
         }
 

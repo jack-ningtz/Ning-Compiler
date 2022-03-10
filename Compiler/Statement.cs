@@ -49,7 +49,7 @@ namespace Compiler
             tree = n.MkAstUnary(ASTEnum.A_PRINT,tree,0);
             //Gen.GenPrintInt(reg);
             //Gen.GenFreeregs();
-            miscellaneous.Semi();
+           // miscellaneous.Semi();
             return tree;
         }
         public void Var_Declaration()
@@ -77,10 +77,18 @@ namespace Compiler
             tree = n.MkAst(ASTEnum.A_ASSIGN, left, null, right,0);
             //Gen.GenAST(tree, -1);
             //Gen.GenFreeregs();
-            miscellaneous.Semi();
+            // miscellaneous.Semi();
             return tree;
         }
-
+        // if_statement: if_head
+        //      |        if_head 'else' compound_statement
+        //      ;
+        //
+        // if_head: 'if' '(' true_false_expression ')' compound_statement  ;
+        //
+        // Parse an IF statement including
+        // any optional ELSE clause
+        // and return its AST
         public AST IF_Statement()
         {
             AST n = new AST();
@@ -99,6 +107,10 @@ namespace Compiler
             }
             return n.MkAst(ASTEnum.A_IF, condast, trueast, falseast, 0);
         }
+        // while_statement: 'while' '(' true_false_expression ')' compound_statement  ;
+        //
+        // Parse a WHILE statement
+        // and return its AST
         public AST While_Statement()
         {
             AST n = new AST();
@@ -113,39 +125,74 @@ namespace Compiler
             return n.MkAst(ASTEnum.A_WHILE, condAST, null, bodyAST, 0);
 
         }
+        // for_statement: 'for' '(' preop_statement ';'
+        //                          true_false_expression ';'
+        //                          postop_statement ')' compound_statement  ;
+        //
+        // preop_statement:  statement          (for now)
+        // postop_statement: statement          (for now)
+        //
+        // Parse a FOR statement
+        // and return its AST
+        public AST For_Statement()
+        {
+            AST n = new AST();
+            AST condAST, bodyAST;
+            AST preopAST, postopAST;
+            AST tree;
+            miscellaneous.Match(Enum.T_FOR, "for");
+            miscellaneous.LParen();
+
+            preopAST = Single_Statement();
+            miscellaneous.Semi();
+
+            condAST = parser.Binexpr(0);
+            if ((condAST.op < ASTEnum.A_EQ) || (condAST.op > ASTEnum.A_GE))
+                Error.Fatal_General("Bad comparison operator");
+            miscellaneous.Semi();
+            postopAST = Single_Statement();
+            miscellaneous.RParen();
+            bodyAST = Compound_Statement();
+
+            tree = n.MkAst(ASTEnum.A_GLUE, bodyAST, null, postopAST, 0);
+            tree = n.MkAst(ASTEnum.A_WHILE, condAST, null, tree, 0);
+            tree = n.MkAst(ASTEnum.A_GLUE, preopAST, null, tree, 0);
+            return tree;
+        }
+        public AST Single_Statement()
+        {
+            switch (parser.token.token)
+            {
+                case Enum.T_PRINT:
+                    return this.Print_Statement();
+                case Enum.T_INT:
+                    this.Var_Declaration();
+                    return null;
+                case Enum.T_IDENT:
+                    return this.Assignment_Statement();
+                case Enum.T_IF:
+                    return IF_Statement();
+                case Enum.T_WHILE:
+                    return this.While_Statement();
+                case Enum.T_FOR:
+                    return this.For_Statement();
+                default:
+                    Error.Fatald("Syntax error, token", parser.token.token, Lexer.line);
+                    return null;
+            }
+        }
         public AST Compound_Statement()
         {
             AST n = new AST();
+
             AST left = null, tree;
             miscellaneous.Lbrace();
             while (true)
             {
-                switch (parser.token.token)
+                tree = Single_Statement();
+                if ((tree != null) && ((tree.op == ASTEnum.A_PRINT) || (tree.op == ASTEnum.A_ASSIGN)))
                 {
-                    case Enum.T_PRINT:
-                        tree = this.Print_Statement();
-                        break;
-                    case Enum.T_INT:
-                        this.Var_Declaration();
-                        tree = null;
-                        break;
-                    case Enum.T_IDENT:
-                        tree = this.Assignment_Statement();
-                        break;
-                    case Enum.T_IF:
-                        tree = IF_Statement();
-                        break;
-                    case Enum.T_WHILE:
-                        tree = this.While_Statement();
-                        break;
-                    case Enum.T_RBRACE:
-                        miscellaneous.Rbrace();
-                        return left;
-;
-                    default:
-                        Error.Fatald("Syntax error, token", parser.token.token, Lexer.line);
-                        return null;
-
+                    miscellaneous.Semi();
                 }
                 if (tree != null)
                 {
@@ -154,7 +201,49 @@ namespace Compiler
                     else
                         left = n.MkAst(ASTEnum.A_GLUE, left, null, tree, 0);
                 }
+                if (parser.token.token == Enum.T_RBRACE)
+                {
+                    miscellaneous.Rbrace();
+                    return (left);
+                }
             }
+            //            while (true)
+            //            {
+            //                switch (parser.token.token)
+            //                {
+            //                    case Enum.T_PRINT:
+            //                        tree = this.Print_Statement();
+            //                        break;
+            //                    case Enum.T_INT:
+            //                        this.Var_Declaration();
+            //                        tree = null;
+            //                        break;
+            //                    case Enum.T_IDENT:
+            //                        tree = this.Assignment_Statement();
+            //                        break;
+            //                    case Enum.T_IF:
+            //                        tree = IF_Statement();
+            //                        break;
+            //                    case Enum.T_WHILE:
+            //                        tree = this.While_Statement();
+            //                        break;
+            //                    case Enum.T_RBRACE:
+            //                        miscellaneous.Rbrace();
+            //                        return left;
+            //;                
+            //                    default:
+            //                        Error.Fatald("Syntax error, token", parser.token.token, Lexer.line);
+            //                        return null;
+
+            //                }
+            //                if (tree != null)
+            //                {
+            //                    if (left == null)
+            //                        left = tree;
+            //                    else
+            //                        left = n.MkAst(ASTEnum.A_GLUE, left, null, tree, 0);
+            //                }
+            //            }
         }
         //public void Statements()
         //{
